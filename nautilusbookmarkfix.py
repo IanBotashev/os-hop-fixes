@@ -1,5 +1,6 @@
 import argparse
 import os
+import pwd
 
 
 def main(files):
@@ -10,6 +11,7 @@ def main(files):
     """
     assert_files_exist(files)
     for file in files:
+        print(f"    Editing {file}")
         with open(file, "r+") as f:
             data = f.readlines()
             f.seek(0)  # Go back to start of file
@@ -34,6 +36,21 @@ def assert_files_exist(files):
             raise FileNotFoundError(f"{file} does not exist")
 
 
+def get_original_user_home():
+    """
+    :return: Path to the home folder of the user who ran sudo
+    """
+    # Check if the script is run with sudo
+    sudo_user = os.environ.get('SUDO_USER')
+    if sudo_user:
+        # Get the home directory of the user who invoked sudo
+        user_home = pwd.getpwnam(sudo_user).pw_dir
+    else:
+        # Fallback to the current user's home directory if not run with sudo
+        user_home = os.environ.get('HOME')
+    return user_home
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Removes default Nautilus bookmarks.')
     parser.add_argument('-f',
@@ -41,12 +58,10 @@ if __name__ == '__main__':
                         nargs="+",
                         help='The files that this tool will edit. Default values should work.')
     args = parser.parse_args()
-
     # Default files to edit
     if args.files is None:
-        args.files = [os.path.expanduser('~') + '/.config/user-dirs.dirs', '/etc/xdg/user-dirs.defaults']
-
-    input(f"Please backup the following files:\n  {"\n  ".join(args.files)}\nthen press enter...")
+        args.files = [get_original_user_home() + '/.config/user-dirs.dirs', '/etc/xdg/user-dirs.defaults']
+    input("Please backup the following files:\n    " + '\n    '.join(args.files) + "\nthen press enter...")
     print("Starting job...")
     main(args.files)
     print("Files edited, to finalize changes log out then back in.")

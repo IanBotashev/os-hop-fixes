@@ -47,4 +47,4 @@ if __name__ == '__main__':
     input(f"Please backup the following files:\n  {"\n  ".join(args.files)}\nthen press enter...")
     print("Starting job...")
     main(args.files)
-    print("Finished.")
+    print("Files edited, to finalize changes log out then back in.")

@@ -2,5 +2,8 @@
 Mainly a personal tool for my endless reinstalls of my linux distro.
 
 ## Current tools:
-### nautilusbookmarkfix
-Allows the default nautilus bookmarks to be removed/renamed
+### nautilus_bookmark_fix
+De-elevates the default bookmarks in nautilus to allow them to be edited from the GUI explorer
+
+### fix_i2c_nvidia
+Attempts to fix the pesky "i2c timeout error" on boot by blacklisting the i2c driver.

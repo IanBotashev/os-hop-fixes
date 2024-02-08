@@ -15,7 +15,8 @@ def main(args):
     # Do a before-hand check for root privileges incase of -u flag being set, to not edit files unnecessarily and error out.
     # Could be a bit panicky for someone, especially considering we're essentially messing w/ drivers.
     if args.update and not is_root():
-        raise PermissionError("Update flag is set but we don't have permission to update initramfs, exiting. No files were edited.")
+        print("Update flag is set but we don't have permission to update initramfs, exiting. No files were edited.")
+        exit()
 
     if is_already_applied(args.file, args.contents) and not args.force:
         print("Fix has already been applied. To force reapplication, use --force flag.")

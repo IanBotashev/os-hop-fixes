@@ -5,15 +5,17 @@ import os
 def main(files):
     """
     Meat and potatoes for this utility
-    :param files:
-    :return:
+    :param files: List of files to fix
+    :return: None
     """
     assert_files_exist(files)
     for file in files:
-        with open(file, "r") as f:
+        with open(file, "r+") as f:
             data = f.readlines()
+            f.seek(0)  # Go back to start of file
+            f.truncate(0)  # Blank out file
 
-        with open(file, "w") as f:
+            # Comment out any lines
             for line in data:
                 if not line.strip().startswith("#"):
                     line = "# " + line
@@ -24,8 +26,8 @@ def main(files):
 def assert_files_exist(files):
     """
     Makes sure that all of the passed-in files actually exist in the filesystem.
-    :param files:
-    :return:
+    :param files: Files to check over
+    :return: None, raises FileNotFoundError if file does not exist
     """
     for file in files:
         if not os.path.exists(file):
